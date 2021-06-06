@@ -3,9 +3,10 @@ version: "3"
 services:
   prometheus:
     image: prom/prometheus
-    ports:
-      - 9090:9090
+    expose:
+      - 9090
     volumes:
+      - prometheus_data:/prometheus
       - $PWD/prometheus.yml:/etc/prometheus/prometheus.yml
     depends_on:
       - blackbox
@@ -13,9 +14,9 @@ services:
   grafana:
     image: grafana/grafana
     ports:
-      - 3000:3000
+      - 4545:3000
     volumes:
-      - $PWD/ambassador.yaml:/ambassador/ambassador-config/ambassador.yaml
+      - grafana_data:/var/lib/grafana
     depends_on:
       - prometheus
 
@@ -25,3 +26,7 @@ services:
       - 9115
     volumes:
       - $PWD/blackbox.yml:/etc/blackbox_exporter/config.yml
+
+volumes: 
+  prometheus_data: {}
+  grafana_data: {}
